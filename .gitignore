@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.py[cod]
+app_users.sqlite3
+*.log
+.streamlit/secrets.toml
