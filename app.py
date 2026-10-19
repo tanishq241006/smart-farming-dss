@@ -5,6 +5,7 @@ from pathlib import Path
 import hashlib
 import hmac
 import json
+import os
 import secrets
 import sqlite3
 from datetime import datetime, timedelta
@@ -23,11 +24,48 @@ PRIOR_DAY_DATA = ROOT / "CROP DATA 2026-10-14.csv"
 USER_DB = ROOT / "app_users.sqlite3"
 PASSWORD_ROUNDS = 310_000
 
+
+def get_database_url() -> str | None:
+    """Read a shared database URL from the host environment or Streamlit secrets."""
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        return database_url
+    try:
+        return st.secrets.get("DATABASE_URL")
+    except (FileNotFoundError, RuntimeError):
+        return None
+
+
+def database_connection():
+    """Connect to shared PostgreSQL when configured, otherwise use local SQLite."""
+    database_url = get_database_url()
+    if database_url:
+        import psycopg
+        from psycopg.rows import dict_row
+
+        return psycopg.connect(database_url, row_factory=dict_row)
+    connection = sqlite3.connect(USER_DB)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+def execute(connection, query: str, params: tuple = ()):
+    """Use the placeholder style required by the configured database driver."""
+    if get_database_url():
+        query = query.replace("?", "%s")
+    return connection.execute(query, params)
+
 st.set_page_config(page_title="Smart Farming DSS", page_icon="🌾", layout="wide")
 
 
-def apply_green_theme() -> None:
-    """Use the forest green, leaf green, mint, and warm gold from the project deck."""
+def apply_green_theme(dark: bool = False) -> None:
+    """Apply the dashboard's light or dark color palette."""
+    page_bg = "#000000" if dark else "#F2F8F3"
+    card_bg = "#101010" if dark else "#FFFFFF"
+    ink = "#F1F1F1" if dark else "#18352A"
+    muted = "#B8B8B8" if dark else "#5C7165"
+    sidebar_bg = "#080808" if dark else "#EAF3EC"
+    border = "#303030" if dark else "#D7E6DA"
     st.markdown(
         """
         <style>
@@ -36,34 +74,34 @@ def apply_green_theme() -> None:
             --leaf: #40916C;
             --leaf-deep: #245C43;
             --mint: #CFE3D6;
-            --mist: #F2F8F3;
+            --mist: @PAGE_BG;
             --gold: #E9C46A;
-            --ink: #18352A;
-            --muted: #5C7165;
+            --ink: @INK;
+            --muted: @MUTED;
         }
         .stApp {
             background:
-                radial-gradient(ellipse at 10% 0%, rgba(207, 227, 214, .55), transparent 35%),
-                linear-gradient(135deg, #F7FBF7 0%, #EEF6F0 55%, #F8FAF5 100%);
+                radial-gradient(ellipse at 10% 0%, rgba(64, 145, 108, .12), transparent 35%),
+                linear-gradient(135deg, @PAGE_BG 0%, @PAGE_BG 100%);
             color: var(--ink);
         }
-        [data-testid="stHeader"] { background: rgba(247, 251, 247, .88); }
+        [data-testid="stHeader"] { background: @PAGE_BG; }
         .main .block-container { max-width: 1180px; padding-top: 2.4rem; padding-bottom: 3rem; }
-        h1, h2, h3 { color: var(--forest); letter-spacing: -.025em; }
+        h1, h2, h3 { color: var(--ink); letter-spacing: -.025em; }
         p, label, [data-testid="stCaptionContainer"] { color: var(--muted); }
-        section[data-testid="stSidebar"] { background: #EAF3EC; border-right: 1px solid #D7E6DA; }
+        section[data-testid="stSidebar"] { background: @SIDEBAR; border-right: 1px solid @BORDER; }
         section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3 { color: var(--forest); }
+        section[data-testid="stSidebar"] h3 { color: var(--ink); }
         div[data-testid="stVerticalBlockBorderWrapper"] {
-            background: #FFFFFF;
-            border: 1px solid #C7DCCB;
+            background: @CARD;
+            border: 1px solid @BORDER;
             border-radius: 24px;
             box-shadow: 0 22px 60px rgba(27, 67, 50, .16);
         }
         div[data-testid="stTextInput"] input {
             border-radius: 11px;
             border-color: #C7D9CC;
-            background: #FBFDFC;
+            background: @CARD;
         }
         div[data-testid="stTextInput"] input:focus {
             border-color: var(--leaf);
@@ -87,19 +125,21 @@ def apply_green_theme() -> None:
         }
         div[data-testid="stTabs"] button[role="tab"] { color: var(--muted); }
         div[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
-            color: var(--forest);
+            color: var(--ink);
             border-bottom-color: var(--leaf);
         }
         div[data-testid="stTabs"] [data-baseweb="tab-highlight"] { background-color: var(--leaf); }
         div[data-testid="stMetric"] {
-            background: rgba(255, 255, 255, .78);
-            border: 1px solid #DDE9DF;
+            background: @CARD;
+            border: 1px solid @BORDER;
             border-radius: 16px;
             padding: 1rem 1.15rem;
         }
         div[data-testid="stMetricLabel"] p { color: var(--muted); }
-        div[data-testid="stMetricValue"] { color: var(--forest); }
+        div[data-testid="stMetricValue"] { color: var(--ink); }
         [data-testid="stDataFrame"] { border: 1px solid #DDE9DF; border-radius: 12px; overflow: hidden; }
+        [data-testid="stSelectbox"] label, [data-testid="stMultiSelect"] label { color: var(--ink); }
+        .stMarkdown, [data-testid="stExpander"] { color: var(--ink); }
         .login-mark {
             width: 62px; height: 62px; margin: 0 auto 1rem; border-radius: 20px;
             display: grid; place-items: center; color: var(--forest); font-size: 31px;
@@ -115,34 +155,39 @@ def apply_green_theme() -> None:
             line-height: 1.55; margin: -.3rem 0 1.2rem;
         }
         </style>
-        """,
+        """.replace("@PAGE_BG", page_bg).replace("@CARD", card_bg).replace("@INK", ink)
+        .replace("@MUTED", muted).replace("@SIDEBAR", sidebar_bg).replace("@BORDER", border),
         unsafe_allow_html=True,
     )
 
 
 def initialize_user_store() -> None:
-    """Create the local account table on first run."""
-    with sqlite3.connect(USER_DB) as connection:
-        connection.execute(
+    """Create account and farmer profile tables in the configured database."""
+    shared_database = bool(get_database_url())
+    binary_type = "BYTEA" if shared_database else "BLOB"
+    timestamp_type = "TIMESTAMPTZ" if shared_database else "TEXT"
+    with database_connection() as connection:
+        execute(connection,
             """CREATE TABLE IF NOT EXISTS users (
-                username TEXT PRIMARY KEY COLLATE NOCASE,
-                password_salt BLOB NOT NULL,
-                password_hash BLOB NOT NULL,
-                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-            )"""
+                username TEXT PRIMARY KEY,
+                password_salt {binary_type} NOT NULL,
+                password_hash {binary_type} NOT NULL,
+                created_at {timestamp_type} NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )""".format(binary_type=binary_type, timestamp_type=timestamp_type)
         )
-        connection.execute(
+        execute(connection, "CREATE UNIQUE INDEX IF NOT EXISTS users_username_lower_idx ON users (LOWER(username))")
+        execute(connection,
             """CREATE TABLE IF NOT EXISTS farmer_profiles (
-                username TEXT PRIMARY KEY COLLATE NOCASE,
+                username TEXT PRIMARY KEY,
                 state TEXT NOT NULL,
                 district TEXT NOT NULL,
                 crop TEXT NOT NULL,
                 farm_size_acres REAL NOT NULL,
                 irrigation TEXT NOT NULL,
                 soil_type TEXT NOT NULL,
-                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at {timestamp_type} NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE
-            )"""
+            )""".format(timestamp_type=timestamp_type)
         )
 
 
@@ -162,25 +207,27 @@ def create_account(username: str, password: str) -> tuple[bool, str]:
     salt = secrets.token_bytes(16)
     password_hash = hash_password(password, salt)
     try:
-        with sqlite3.connect(USER_DB) as connection:
-            connection.execute(
+        with database_connection() as connection:
+            execute(connection,
                 "INSERT INTO users (username, password_salt, password_hash) VALUES (?, ?, ?)",
                 (username, salt, password_hash),
             )
-    except sqlite3.IntegrityError:
+    except Exception as exc:
+        if not isinstance(exc, sqlite3.IntegrityError) and getattr(exc, "sqlstate", None) != "23505":
+            raise
         return False, "That username is already registered. Try signing in instead."
     return True, username
 
 
 def authenticate(username: str, password: str) -> bool:
-    with sqlite3.connect(USER_DB) as connection:
-        row = connection.execute(
-            "SELECT username, password_salt, password_hash FROM users WHERE username = ? COLLATE NOCASE",
+    with database_connection() as connection:
+        row = execute(connection,
+            "SELECT username, password_salt, password_hash FROM users WHERE LOWER(username) = LOWER(?)",
             (username.strip(),),
         ).fetchone()
     if row is None:
         return False
-    stored_username, salt, stored_hash = row
+    stored_username, salt, stored_hash = row["username"], row["password_salt"], row["password_hash"]
     candidate_hash = hash_password(password, salt)
     if not hmac.compare_digest(candidate_hash, stored_hash):
         return False
@@ -189,15 +236,14 @@ def authenticate(username: str, password: str) -> bool:
 
 
 def get_farmer_profile(username: str) -> dict | None:
-    with sqlite3.connect(USER_DB) as connection:
-        connection.row_factory = sqlite3.Row
-        row = connection.execute("SELECT * FROM farmer_profiles WHERE username = ? COLLATE NOCASE", (username,)).fetchone()
+    with database_connection() as connection:
+        row = execute(connection, "SELECT * FROM farmer_profiles WHERE LOWER(username) = LOWER(?)", (username,)).fetchone()
     return dict(row) if row else None
 
 
 def save_farmer_profile(username: str, profile: dict) -> None:
-    with sqlite3.connect(USER_DB) as connection:
-        connection.execute(
+    with database_connection() as connection:
+        execute(connection,
             """INSERT INTO farmer_profiles
                (username, state, district, crop, farm_size_acres, irrigation, soil_type)
                VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -257,7 +303,7 @@ def render_farmer_setup(username: str, dataframe: pd.DataFrame, existing: dict |
         })
         st.session_state.pop("editing_profile", None)
         st.rerun()
-    st.caption("Your profile is stored locally on this device. You can change it later from the sidebar.")
+    st.caption("Your profile is saved with your account. You can change it later from the sidebar.")
 
 
 @st.cache_data
@@ -385,75 +431,30 @@ def get_mandi_api_history(state: str, commodity: str, market: str | None,
     return history, payload.get("meta", {})
 
 
-def weather_description(code: int) -> str:
-    """Translate common WMO weather codes to short labels."""
-    if code == 0:
-        return "Clear sky"
-    if code in (1, 2, 3):
-        return "Mainly clear" if code == 1 else "Partly cloudy" if code == 2 else "Overcast"
-    if code in (45, 48):
-        return "Fog"
-    if code in (51, 53, 55, 56, 57):
-        return "Drizzle"
-    if code in (61, 63, 65, 66, 67, 80, 81, 82):
-        return "Rain"
-    if code in (71, 73, 75, 77, 85, 86):
-        return "Snow"
-    if code in (95, 96, 99):
-        return "Thunderstorm"
-    return "Conditions unavailable"
-
-
-def render_weather(dataframe: pd.DataFrame, selected_states: list[str], profile: dict) -> None:
-    st.subheader("Local weather forecast")
-    states = sorted(selected_states)
-    if not states:
-        st.info("Select a state and district in the sidebar to view the local forecast.")
-        return
-    default_state = profile["state"] if profile["state"] in states else states[0]
-    state = st.selectbox("Weather location · state", states, index=states.index(default_state), key="weather_state")
-    available_districts = sorted(dataframe.loc[dataframe["State"] == state, "District"].dropna().unique())
-    if not available_districts:
-        st.info("No districts are listed for this state in the selected crop data.")
-        return
-    default_district = profile["district"] if profile["district"] in available_districts else available_districts[0]
-    if st.session_state.get("weather_district") not in available_districts:
-        st.session_state["weather_district"] = default_district
-    district = st.selectbox("Weather location · district", available_districts, key="weather_district")
-    place = f"{district}, {state}, India"
-    try:
-        location, data = get_weather(place)
-    except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError) as exc:
-        st.warning(f"Weather is temporarily unavailable: {exc}")
-        return
-    current = data.get("current", {})
-    st.caption(f"{location.get('name', district)}, {location.get('admin1', state)} · Open-Meteo · updated {current.get('time', 'recently')}")
-    cols = st.columns(4)
-    cols[0].metric("Conditions", weather_description(int(current.get("weather_code", -1))))
-    cols[1].metric("Temperature", f"{current.get('temperature_2m', '—')} °C")
-    cols[2].metric("Humidity", f"{current.get('relative_humidity_2m', '—')}%")
-    cols[3].metric("Rain now", f"{current.get('precipitation', '—')} mm")
+def weather_price_factor(data: dict) -> tuple[float, str]:
+    """Return a small, explainable weather scenario factor (not a market forecast)."""
     daily = data.get("daily", {})
-    forecast_df = pd.DataFrame({
-        "Date": daily.get("time", []),
-        "Conditions": [weather_description(int(code)) for code in daily.get("weather_code", [])],
-        "Low (°C)": daily.get("temperature_2m_min", []),
-        "High (°C)": daily.get("temperature_2m_max", []),
-        "Rain chance (%)": daily.get("precipitation_probability_max", []),
-        "Rain (mm)": daily.get("precipitation_sum", []),
-    })
-    st.dataframe(forecast_df, use_container_width=True, hide_index=True)
-    rain_next_days = sum(float(amount or 0) for amount in daily.get("precipitation_sum", [])[:3])
-    if rain_next_days >= 10:
-        st.info(f"Farm note for your {profile['irrigation'].lower()} setup: around {rain_next_days:.0f} mm of rain is forecast over the next three days. Check local field conditions and the forecast again before planning irrigation or field work.")
-    elif profile["irrigation"] == "Rainfed":
-        st.info("Farm note: no substantial rain appears in this three-day forecast. Keep checking local forecasts; this is not a crop water requirement estimate.")
-    else:
-        st.caption(f"Farm context: {profile['farm_size_acres']:g} acres · {profile['irrigation']} · soil listed as {profile['soil_type']}.")
+    rain = sum(float(value or 0) for value in daily.get("precipitation_sum", [])[:3])
+    high_temps = [float(value) for value in daily.get("temperature_2m_max", [])[:3] if value is not None]
+    adjustment = 0.03 if rain >= 20 else 0.015 if rain >= 5 else 0.0
+    reasons = [f"{rain:.0f} mm forecast rain over 3 days" ] if adjustment else []
+    if high_temps and max(high_temps) >= 38:
+        adjustment += 0.01
+        reasons.append(f"highs up to {max(high_temps):.0f}°C")
+    return 1 + adjustment, "; ".join(reasons) if reasons else "No material rain or heat signal in the 3-day forecast"
+
+
+def get_profile_weather(profile: dict) -> tuple[dict, dict] | None:
+    try:
+        location, data = get_weather(f"{profile['district']}, {profile['state']}, India")
+        return location, data
+    except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError):
+        return None
 
 
 @st.fragment(run_every=300)
-def render_live_price_feed(commodity: str, commodity_options: list[str], profile: dict) -> None:
+def render_live_price_feed(commodity: str, commodity_options: list[str], profile: dict,
+                           weather_factor: float = 1.0) -> None:
     """Refresh price reports every five minutes and use the API's own lookup/history endpoints."""
     st.subheader("Latest published mandi prices")
     st.caption("Mandi API · checked every 5 minutes · prices change when new mandi reports are published.")
@@ -552,13 +553,17 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
             return
         report_date = live_prices["Arrival Date"].max() if "Arrival Date" in live_prices else None
         latest = live_prices[live_prices["Arrival Date"] == report_date].copy() if pd.notna(report_date) else live_prices.copy()
+        latest["Weather guide (₹/quintal)"] = latest["Modal Price"]
+        home_district_rows = latest["District"].astype(str).str.strip().eq(profile["district"])
+        if live_state == profile["state"]:
+            latest.loc[home_district_rows, "Weather guide (₹/quintal)"] = (
+                latest.loc[home_district_rows, "Modal Price"] * weather_factor
+            ).round(0)
         if pd.notna(report_date):
             st.caption(f"Latest mandi arrival date: {report_date:%d %b %Y}")
-        if meta.get("latest_fetched_at"):
-            st.caption(f"API source last fetched: {meta['latest_fetched_at']}")
         if "Modal Price" in latest and not latest.empty:
-            best = latest.loc[latest["Modal Price"].idxmax()]
-            st.success(f"⭐ Highest reported price in this view: {best.get('Market', 'Market')}, {best.get('District', '')} · ₹{best['Modal Price']:,.0f}/quintal")
+            best = latest.loc[latest["Weather guide (₹/quintal)"].idxmax()]
+            st.success(f"⭐ Highest guide in this view: {best.get('Market', 'Market')}, {best.get('District', '')} · ₹{best['Weather guide (₹/quintal)']:,.0f}/quintal")
         st.dataframe(latest, use_container_width=True, hide_index=True)
         st.download_button(
             "Download latest mandi report (CSV)", latest.to_csv(index=False).encode("utf-8-sig"),
@@ -648,6 +653,9 @@ def render_login_page() -> None:
 def render_dashboard() -> None:
     user = st.session_state["authenticated_user"]
     with st.sidebar:
+        st.session_state.setdefault("dark_mode", False)
+        dark_mode = st.toggle("🌙 Dark mode", key="dark_mode")
+        apply_green_theme(dark_mode)
         st.write(f"Signed in as **{user}**")
         if st.button("Sign out", use_container_width=True):
             st.session_state.pop("authenticated_user", None)
@@ -666,6 +674,8 @@ def render_dashboard() -> None:
     if not profile or st.session_state.get("editing_profile", False):
         render_farmer_setup(user, df, profile)
         st.stop()
+    weather_result = get_profile_weather(profile)
+    weather_factor, weather_reason = weather_price_factor(weather_result[1]) if weather_result else (1.0, "Weather unavailable")
 
     with st.sidebar:
         st.divider()
@@ -722,8 +732,15 @@ def render_dashboard() -> None:
         price_fields = {name: (name, "mean") for name in ("Min Price", "Max Price") if name in snapshot}
         price_fields["Modal Price"] = ("Modal Price", "mean")
         compare = snapshot.groupby(["State", "District", "Market"], as_index=False).agg(**price_fields)
-        compare["Modal Price"] = compare["Modal Price"].round(0)
-        compare = compare.sort_values("Modal Price", ascending=False)
+        compare["Reported price (₹/quintal)"] = compare["Modal Price"].round(0)
+        compare["Weather-adjusted guide (₹/quintal)"] = compare["Reported price (₹/quintal)"]
+        home_weather = (compare["State"].eq(profile["state"]) & compare["District"].eq(profile["district"]))
+        compare.loc[home_weather, "Weather-adjusted guide (₹/quintal)"] = (
+            compare.loc[home_weather, "Reported price (₹/quintal)"] * weather_factor
+        ).round(0)
+        compare["Modal Price"] = compare["Reported price (₹/quintal)"]
+        rank_price = "Weather-adjusted guide (₹/quintal)"
+        compare = compare.sort_values(rank_price, ascending=False)
         high, low = compare.iloc[0], compare.iloc[-1]
         home_markets = compare[(compare["State"] == profile["state"]) & (compare["District"] == profile["district"])]
         recommendation = home_markets.iloc[0] if not home_markets.empty else high
@@ -731,26 +748,31 @@ def render_dashboard() -> None:
             st.markdown("### ⭐ Best mandi match for your filters")
             rec_col1, rec_col2, rec_col3 = st.columns([2, 1, 1])
             rec_col1.markdown(f"**{recommendation['Market']}**  \n{recommendation['District']}, {recommendation['State']}")
-            rec_col2.metric("Reported modal price", f"₹{recommendation['Modal Price']:,.0f}/quintal")
+            rec_col2.metric("Weather-adjusted guide", f"₹{recommendation[rank_price]:,.0f}/quintal")
             rec_col3.metric("Data date", latest_date.strftime("%d %b %Y"))
             if not home_markets.empty:
-                st.caption(f"Highest reported price for {profile['crop']} in your home district. Compare transport, quality, and arrivals before choosing a market.")
+                st.caption(f"Based on a reported mandi price of ₹{recommendation['Reported price (₹/quintal)']:,.0f}/quintal. Weather signal: {weather_reason}. This is a planning guide, not a market quote.")
             else:
                 st.caption(f"Your home district has no matching record in this data view. Showing the highest reported price in your selected filters for {selected_commodity}. Compare transport, quality, and arrivals before choosing a market.")
             if low["Market"] != high["Market"]:
                 st.caption(f"Price range in selected markets: ₹{low['Modal Price']:,.0f}–₹{high['Modal Price']:,.0f}/quintal.")
         fig = px.bar(
-            compare.head(25).sort_values("Modal Price"),
-            x="Market",
-            y="Modal Price",
+            compare.head(25).sort_values(rank_price),
+            x=rank_price,
+            y="Market",
             color="State",
             color_discrete_sequence=["#1B4332", "#40916C", "#74A892", "#A8CDB4", "#E9C46A"],
-            hover_data=[name for name in ("District", "Min Price", "Max Price") if name in compare],
-            title="25 highest reported market prices (₹ per quintal)",
+            title="Highest mandi prices · ₹ per quintal",
+            text=rank_price,
+            hover_data=["Reported price (₹/quintal)", "District", "State"],
         )
-        fig.update_layout(xaxis_title="Modal price (₹/quintal)", yaxis_title="Market", showlegend=True)
-        fig.update_traces(orientation="h")
+        fig.update_layout(xaxis_title="Price guide (₹ per quintal)", yaxis_title="", showlegend=False,
+                          template="plotly_dark" if dark_mode else "plotly_white", margin=dict(l=10, r=20, t=55, b=20))
+        fig.update_traces(orientation="h", texttemplate="₹%{x:,.0f}", textposition="outside",
+                          marker_line_width=0, cliponaxis=False)
+        fig.update_yaxes(automargin=True, categoryorder="total ascending")
         st.plotly_chart(fig, use_container_width=True)
+        st.caption(f"Weather guide applies only to your home district. Rule of thumb: +1.5% for 5–19 mm forecast rain, +3% for 20+ mm, and +1% for forecast highs of 38°C or more. Signal: {weather_reason}. Other districts show reported prices unchanged.")
         st.dataframe(compare, use_container_width=True, hide_index=True, height=420)
         st.download_button(
             "Download filtered market comparison (CSV)",
@@ -790,18 +812,12 @@ def render_dashboard() -> None:
             st.info("No like-for-like market records are available to compare with the previous report.")
 
     with st.expander("Latest published mandi prices", expanded=True):
-        render_live_price_feed(selected_commodity, commodity_options, profile)
+        render_live_price_feed(selected_commodity, commodity_options, profile, weather_factor)
 
-    render_weather(df, selected_states, profile)
-
-    st.subheader("Price history and forecasting")
+    st.subheader("Price history")
     date_count = df["Arrival_Date"].nunique()
     if date_count < 2:
-        st.warning(
-            f"The current CSV contains {date_count} distinct date. A forecast model cannot be trained "
-            "from a single-day snapshot. Add historical daily or weekly records for the same crop and "
-            "market before enabling predictions."
-        )
+        st.info("Historical chart appears when multiple reporting dates are available.")
     else:
         history = filtered.groupby("Arrival_Date", as_index=False)["Modal Price"].mean()
         history_fig = px.line(
@@ -813,16 +829,19 @@ def render_dashboard() -> None:
         )
         history_fig.update_traces(line={"width": 3}, marker={"size": 8})
         history_fig.update_layout(xaxis_title="Arrival date", yaxis_title="Average modal price (₹/quintal)")
+        history_fig.update_layout(template="plotly_dark" if dark_mode else "plotly_white",
+                                  hovermode="x unified", margin=dict(l=10, r=20, t=25, b=20))
+        history_fig.update_traces(line={"width": 3}, marker={"size": 8},
+                                  hovertemplate="%{x|%d %b %Y}<br>₹%{y:,.0f}/quintal<extra></extra>")
         st.plotly_chart(history_fig, use_container_width=True)
-        st.info("Historical trend is shown. Forecasting will be added after data quality and model evaluation.")
 
     st.caption("Decision support only. Market prices vary; verify current prices with the selected mandi.")
 
 
-apply_green_theme()
 initialize_user_store()
 st.session_state.setdefault("authenticated_user", None)
 if st.session_state["authenticated_user"]:
     render_dashboard()
 else:
+    apply_green_theme(st.session_state.get("dark_mode", False))
     render_login_page()
