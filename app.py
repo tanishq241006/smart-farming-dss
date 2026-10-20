@@ -28,6 +28,8 @@ HINDI = {
     "🌾 AgriSense": "🌾 AgriSense",
     "AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance.": "AgriSense किसानों को स्थानीय मंडी भाव की तुलना और मौसम आधारित योजना संकेत देखने में मदद करता है।",
     "How to use this dashboard": "इस डैशबोर्ड का उपयोग कैसे करें",
+    "How to use": "कैसे उपयोग करें",
+    "Hide guide": "गाइड छिपाएँ",
     "Choose your crop, then select the state, district, and variety you want to compare.": "अपनी फसल चुनें, फिर तुलना के लिए राज्य, जिला और किस्म चुनें।",
     "Compare the reported mandi prices and the weather guide for your home district.": "मंडी के बताए भाव और अपने जिले के मौसम आधारित भाव-संकेत की तुलना करें।",
     "Review the latest published mandi reports and the historical price chart.": "मंडी की नवीनतम प्रकाशित रिपोर्ट और पुराने भावों का चार्ट देखें।",
@@ -167,24 +169,15 @@ def render_language_picker(container=st) -> None:
     container.selectbox("Language / भाषा", ["English", "हिन्दी"], key="ui_language", label_visibility="collapsed")
 
 
-def render_page_intro() -> None:
-    with st.container(border=True, key="how_to_banner"):
-        heading_col, language_col = st.columns([5, 1], vertical_alignment="center")
-        with heading_col:
-            st.markdown(f"#### 📘 {tr('How to use this dashboard')}")
-        with language_col:
-            render_language_picker()
-        left_steps, right_steps = st.columns(2)
-        with left_steps:
-            st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
-            st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
-        with right_steps:
-            st.markdown("3. " + tr("Review the latest published mandi reports and the historical price chart."))
-            st.markdown("4. " + tr("Use the download button to save the market comparison as a CSV file."))
+def render_how_to_use_box() -> None:
+    """Show the farmer guide in a bordered sidebar box when requested."""
+    with st.container(border=True, key="how_to_use_box"):
+        st.markdown(f"**📘 {tr('How to use this dashboard')}**")
+        st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
+        st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
+        st.markdown("3. " + tr("Review the latest published mandi reports and the historical price chart."))
+        st.markdown("4. " + tr("Use the download button to save the market comparison as a CSV file."))
         st.caption(tr("The weather guide is an illustrative planning aid, not an official mandi quote. Check the reported price and local conditions before making a sale decision."))
-
-    st.title(tr("🌾 AgriSense"))
-    st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
 
 
 def display_columns(frame: pd.DataFrame) -> pd.DataFrame:
@@ -841,8 +834,21 @@ def render_login_page() -> None:
 
 def render_dashboard() -> None:
     user = st.session_state["authenticated_user"]
-    render_page_intro()
+    st.subheader(tr("Good to see you, {user}").format(user=user))
+    st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
     with st.sidebar:
+        brand_col, filters_col = st.columns([1.35, 1])
+        with brand_col:
+            st.markdown('<div style="font-weight:750;font-size:1rem;white-space:nowrap">🌾 AgriSense</div>', unsafe_allow_html=True)
+        with filters_col:
+            st.markdown(f"**{tr('Filters')}**")
+            st.session_state.setdefault("show_how_to_use", False)
+            guide_label = tr("Hide guide") if st.session_state["show_how_to_use"] else tr("How to use")
+            if st.button(f"📘 {guide_label}", key="toggle_how_to_use", use_container_width=True):
+                st.session_state["show_how_to_use"] = not st.session_state["show_how_to_use"]
+        if st.session_state["show_how_to_use"]:
+            render_how_to_use_box()
+        render_language_picker()
         st.session_state.setdefault("dark_mode", False)
         dark_mode = st.toggle(tr("🌙 Dark mode"), key="dark_mode")
         apply_green_theme(dark_mode)
@@ -877,11 +883,9 @@ def render_dashboard() -> None:
             st.session_state["editing_profile"] = True
             st.rerun()
 
-    st.subheader(tr("Good to see you, {user}").format(user=user))
     st.caption(tr("Your dashboard is set up for **{crop}** in **{district}, {state}**.").format(
         crop=profile["crop"], district=profile["district"], state=profile["state"]))
 
-    st.sidebar.header(tr("Filters"))
     commodity_options = sorted(df["Commodity"].dropna().unique())
     if not commodity_options:
         st.error(tr("No usable crop names were found in this CSV."))
