@@ -1,4 +1,4 @@
-"""Starter dashboard for the Smart Farming Decision Support System."""
+"""AgriSense: a smart farming decision support dashboard."""
 
 from io import BytesIO
 from pathlib import Path
@@ -25,8 +25,8 @@ USER_DB = ROOT / "app_users.sqlite3"
 PASSWORD_ROUNDS = 310_000
 
 HINDI = {
-    "🌾 Smart Farming Dashboard": "🌾 स्मार्ट खेती डैशबोर्ड",
-    "Local mandi prices and simple weather-aware planning guidance to help you compare nearby markets.": "स्थानीय मंडी भाव और मौसम पर आधारित सरल जानकारी, जिससे आप आसपास की मंडियों की तुलना कर सकें।",
+    "🌾 AgriSense": "🌾 AgriSense",
+    "AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance.": "AgriSense किसानों को स्थानीय मंडी भाव की तुलना और मौसम आधारित योजना संकेत देखने में मदद करता है।",
     "How to use this dashboard": "इस डैशबोर्ड का उपयोग कैसे करें",
     "Choose your crop, then select the state, district, and variety you want to compare.": "अपनी फसल चुनें, फिर तुलना के लिए राज्य, जिला और किस्म चुनें।",
     "Compare the reported mandi prices and the weather guide for your home district.": "मंडी के बताए भाव और अपने जिले के मौसम आधारित भाव-संकेत की तुलना करें।",
@@ -37,7 +37,7 @@ HINDI = {
     "Language / भाषा": "भाषा / Language",
     "English": "English",
     "हिन्दी": "हिन्दी",
-    "SMART FARMING · BETTER DECISIONS": "स्मार्ट खेती · बेहतर निर्णय",
+    "AGRISENSE · SMART FARMING": "AgriSense · स्मार्ट खेती",
     "Welcome back": "वापसी पर स्वागत है",
     "Your dashboard is set up for **{crop}** in **{district}, {state}**.": "आपका डैशबोर्ड **{district}, {state}** में **{crop}** के लिए तैयार है।",
     "🌙 Dark mode": "🌙 डार्क मोड",
@@ -168,8 +168,8 @@ def render_language_picker(container=st) -> None:
 
 
 def render_page_intro() -> None:
-    st.title(tr("🌾 Smart Farming Dashboard"))
-    st.caption(tr("Local mandi prices and simple weather-aware planning guidance to help you compare nearby markets."))
+    st.title(tr("🌾 AgriSense"))
+    st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
     with st.expander(tr("How to use this dashboard"), expanded=False):
         st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
         st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
@@ -227,7 +227,7 @@ def execute(connection, query: str, params: tuple = ()):
         query = query.replace("?", "%s")
     return connection.execute(query, params)
 
-st.set_page_config(page_title="Smart Farming DSS", page_icon="🌾", layout="wide")
+st.set_page_config(page_title="AgriSense", page_icon="🌾", layout="wide")
 
 
 def apply_green_theme(dark: bool = False) -> None:
@@ -791,7 +791,7 @@ def render_login_page() -> None:
     with center:
         with st.container(border=True, key="login_card"):
             st.markdown('<div class="login-mark">🌾</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="login-eyebrow">{tr("SMART FARMING · BETTER DECISIONS")}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="login-eyebrow">{tr("AGRISENSE · SMART FARMING")}</div>', unsafe_allow_html=True)
             st.title(tr("Welcome"))
             st.markdown(
                 f'<div class="login-note">{tr("Sign in to compare mandi prices and explore practical farming insights.")}</div>',
@@ -871,6 +871,7 @@ def render_dashboard() -> None:
             st.session_state["editing_profile"] = True
             st.rerun()
 
+    st.subheader(tr("Good to see you, {user}").format(user=user))
     st.caption(tr("Your dashboard is set up for **{crop}** in **{district}, {state}**.").format(
         crop=profile["crop"], district=profile["district"], state=profile["state"]))
 

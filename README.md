@@ -1,4 +1,4 @@
-# Smart Farming Decision Support System
+# AgriSense — Smart Farming Dashboard
 
 ## MVP status
 
