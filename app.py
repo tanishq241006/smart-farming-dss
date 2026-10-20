@@ -263,6 +263,28 @@ def apply_green_theme(dark: bool = False) -> None:
         }
         [data-testid="stHeader"] { background: @PAGE_BG; }
         .main .block-container { max-width: 1180px; padding-top: 2.4rem; padding-bottom: 3rem; }
+        .agrisense-header-brand {
+            position: fixed;
+            top: .42rem;
+            left: calc(18rem + max(0px, (100vw - 18rem - 1180px) / 2));
+            z-index: 1000002;
+            color: var(--ink);
+            font-size: 1.05rem;
+            font-weight: 750;
+            line-height: 2.5rem;
+            pointer-events: none;
+        }
+        .st-key-header_how_to_use {
+            position: fixed !important;
+            top: .28rem !important;
+            right: 9rem !important;
+            z-index: 1000002 !important;
+            width: max-content !important;
+        }
+        @media (max-width: 760px) {
+            .agrisense-header-brand { top: 2.8rem; left: 1rem; }
+            .st-key-header_how_to_use { top: 2.75rem !important; right: 1rem !important; }
+        }
         h1, h2, h3 { color: var(--ink); letter-spacing: -.025em; }
         p, label, [data-testid="stCaptionContainer"] { color: var(--muted); }
         section[data-testid="stSidebar"] { background: @SIDEBAR; border-right: 1px solid @BORDER; }
@@ -836,12 +858,9 @@ def render_login_page() -> None:
 
 def render_dashboard() -> None:
     user = st.session_state["authenticated_user"]
-    brand_col, guide_col = st.columns([6, 1.4])
-    with brand_col:
-        st.markdown("### 🌾 AgriSense")
-    with guide_col:
-        with st.popover(f"📘 {tr('How to use')}"):
-            render_how_to_use_box()
+    st.markdown('<div class="agrisense-header-brand">🌾 AgriSense</div>', unsafe_allow_html=True)
+    with st.popover(f"📘 {tr('How to use')}", key="header_how_to_use"):
+        render_how_to_use_box()
     st.subheader(tr("Good to see you, {user}").format(user=user))
     st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
     with st.sidebar:
