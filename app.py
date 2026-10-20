@@ -24,6 +24,178 @@ PRIOR_DAY_DATA = ROOT / "CROP DATA 2026-10-14.csv"
 USER_DB = ROOT / "app_users.sqlite3"
 PASSWORD_ROUNDS = 310_000
 
+HINDI = {
+    "🌾 Smart Farming Dashboard": "🌾 स्मार्ट खेती डैशबोर्ड",
+    "Local mandi prices and simple weather-aware planning guidance to help you compare nearby markets.": "स्थानीय मंडी भाव और मौसम पर आधारित सरल जानकारी, जिससे आप आसपास की मंडियों की तुलना कर सकें।",
+    "How to use this dashboard": "इस डैशबोर्ड का उपयोग कैसे करें",
+    "Choose your crop, then select the state, district, and variety you want to compare.": "अपनी फसल चुनें, फिर तुलना के लिए राज्य, जिला और किस्म चुनें।",
+    "Compare the reported mandi prices and the weather guide for your home district.": "मंडी के बताए भाव और अपने जिले के मौसम आधारित भाव-संकेत की तुलना करें।",
+    "Review the latest published mandi reports and the historical price chart.": "मंडी की नवीनतम प्रकाशित रिपोर्ट और पुराने भावों का चार्ट देखें।",
+    "Use the download button to save the market comparison as a CSV file.": "मंडी की तुलना CSV फ़ाइल में सहेजने के लिए डाउनलोड बटन दबाएँ।",
+    "Weather guide": "मौसम आधारित संकेत",
+    "The weather guide is an illustrative planning aid, not an official mandi quote. Check the reported price and local conditions before making a sale decision.": "मौसम आधारित संकेत केवल योजना बनाने में मदद के लिए है, यह मंडी का आधिकारिक भाव नहीं है। बिक्री का निर्णय लेने से पहले बताए गए भाव और स्थानीय स्थिति जाँचें।",
+    "Language / भाषा": "भाषा / Language",
+    "English": "English",
+    "हिन्दी": "हिन्दी",
+    "SMART FARMING · BETTER DECISIONS": "स्मार्ट खेती · बेहतर निर्णय",
+    "Welcome back": "वापसी पर स्वागत है",
+    "Your dashboard is set up for **{crop}** in **{district}, {state}**.": "आपका डैशबोर्ड **{district}, {state}** में **{crop}** के लिए तैयार है।",
+    "🌙 Dark mode": "🌙 डार्क मोड",
+    "Signed in as": "साइन इन किया है",
+    "Sign out": "साइन आउट",
+    "Your farm profile": "आपकी खेती की जानकारी",
+    "Edit farm profile": "खेती की जानकारी बदलें",
+    "acres": "एकड़",
+    "water": "पानी",
+    "Soil": "मिट्टी",
+    "Filters": "फ़िल्टर",
+    "Crop / commodity": "फसल / वस्तु",
+    "Choose the crop to compare across mandis.": "मंडियों की तुलना के लिए फसल चुनें।",
+    "State": "राज्य",
+    "District": "जिला",
+    "Variety": "किस्म",
+    "Latest data date": "नवीनतम डेटा की तारीख",
+    "Markets in view": "दिखाई गई मंडियाँ",
+    "Average modal price": "औसत मंडी भाव",
+    "Records in view": "दिखाई गई प्रविष्टियाँ",
+    "Market comparison: {crop}": "मंडी तुलना: {crop}",
+    "No records match these filters. Try selecting another state or district in the sidebar.": "इन फ़िल्टर से कोई रिकॉर्ड नहीं मिला। साइडबार में दूसरा राज्य या जिला चुनें।",
+    "⭐ Best mandi match for your filters": "⭐ आपके फ़िल्टर के अनुसार उपयुक्त मंडी",
+    "Weather-adjusted guide": "मौसम आधारित भाव-संकेत",
+    "Data date": "डेटा की तारीख",
+    "Based on a reported mandi price of ₹{price:,.0f}/quintal. Weather signal: {reason}. This is a planning guide, not a market quote.": "बताया गया मंडी भाव ₹{price:,.0f}/क्विंटल है। मौसम संकेत: {reason}। यह केवल योजना के लिए है, वास्तविक मंडी भाव नहीं।",
+    "Your home district has no matching record in this data view. Showing the highest reported price in your selected filters for {crop}. Compare transport, quality, and arrivals before choosing a market.": "आपके गृह जिले का रिकॉर्ड इस दृश्य में नहीं है। चुने गए फ़िल्टर में {crop} का सबसे अधिक बताया गया भाव दिखाया गया है। मंडी चुनने से पहले परिवहन, गुणवत्ता और आवक की तुलना करें।",
+    "Price range in selected markets: ₹{low:,.0f}–₹{high:,.0f}/quintal.": "चुनी गई मंडियों में भाव की सीमा: ₹{low:,.0f}–₹{high:,.0f}/क्विंटल।",
+    "Highest mandi prices · ₹ per quintal": "सबसे अधिक मंडी भाव · ₹ प्रति क्विंटल",
+    "Price guide (₹ per quintal)": "भाव संकेत (₹ प्रति क्विंटल)",
+    "Weather guide applies only to your home district. Rule of thumb: +1.5% for 5–19 mm forecast rain, +3% for 20+ mm, and +1% for forecast highs of 38°C or more. Signal: {reason}. Other districts show reported prices unchanged.": "मौसम संकेत केवल आपके गृह जिले पर लागू है। अनुमानित नियम: 5–19 मिमी बारिश पर +1.5%, 20 मिमी या अधिक पर +3%, और 38°C या अधिक तापमान पर +1%। संकेत: {reason}। अन्य जिलों के बताए गए भाव नहीं बदले गए हैं।",
+    "Download filtered market comparison (CSV)": "फ़िल्टर की गई मंडी तुलना डाउनलोड करें (CSV)",
+    "Price movement since the previous report": "पिछली रिपोर्ट से भाव में बदलाव",
+    "Compares matching market, crop, variety, and grade records from {start} to {end}. This is historical movement, not a forecast.": "{start} से {end} तक समान मंडी, फसल, किस्म और ग्रेड के रिकॉर्ड की तुलना। यह पुराने भावों का बदलाव है, पूर्वानुमान नहीं।",
+    "Markets matched": "मिलान की गई मंडियाँ",
+    "Prices higher": "भाव बढ़े",
+    "Prices lower": "भाव घटे",
+    "Unchanged": "कोई बदलाव नहीं",
+    "No like-for-like market records are available to compare with the previous report.": "पिछली रिपोर्ट से तुलना के लिए समान मंडी रिकॉर्ड उपलब्ध नहीं हैं।",
+    "Latest published mandi prices": "मंडी के नवीनतम प्रकाशित भाव",
+    "Price history": "भावों का इतिहास",
+    "Historical chart appears when multiple reporting dates are available.": "एक से अधिक रिपोर्ट तारीखें उपलब्ध होने पर पुराने भावों का चार्ट दिखेगा।",
+    "Arrival date": "आवक की तारीख",
+    "Modal price (₹/quintal)": "मंडी भाव (₹/क्विंटल)",
+    "History date range": "इतिहास की तारीख़ सीमा",
+    "Average modal price (₹/quintal)": "औसत मंडी भाव (₹/क्विंटल)",
+    "Decision support only. Market prices vary; verify current prices with the selected mandi.": "यह जानकारी निर्णय में सहायता के लिए है। मंडी भाव बदलते रहते हैं; चुनी हुई मंडी से वर्तमान भाव की पुष्टि करें।",
+    "Let’s set up your farm profile": "आइए, आपकी खेती की जानकारी भरें",
+    "A few details help us start with the right crop, local mandi prices, and weather location.": "कुछ जानकारी से सही फसल, स्थानीय मंडी भाव और मौसम का स्थान चुनने में मदद मिलेगी।",
+    "Your state": "आपका राज्य",
+    "Your district": "आपका जिला",
+    "Main crop you want to track": "जिस फसल के भाव देखना चाहते हैं",
+    "Farm size (acres)": "खेत का आकार (एकड़)",
+    "Water access": "सिंचाई की सुविधा",
+    "Soil type (if known)": "मिट्टी का प्रकार (यदि पता हो)",
+    "Save profile and continue": "जानकारी सहेजें और आगे बढ़ें",
+    "Your profile is saved with your account. You can change it later from the sidebar.": "आपकी जानकारी खाते में सहेजी गई है। आप इसे बाद में साइडबार से बदल सकते हैं।",
+    "Latest published mandi prices": "मंडी के नवीनतम प्रकाशित भाव",
+    "Mandi API · checked every 5 minutes · prices change when new mandi reports are published.": "मंडी API · हर 5 मिनट में जाँच · नई मंडी रिपोर्ट आने पर भाव बदलते हैं।",
+    "Refresh now": "अभी रीफ़्रेश करें",
+    "Price report state": "भाव रिपोर्ट का राज्य",
+    "All districts": "सभी जिले",
+    "All varieties": "सभी किस्में",
+    "Latest available": "नवीनतम उपलब्ध",
+    "Mandi": "मंडी",
+    "Price history": "भावों का इतिहास",
+    "Mandi report date": "मंडी रिपोर्ट की तारीख",
+    "Modal price (₹/quintal)": "मंडी भाव (₹/क्विंटल)",
+    "No history was returned for this crop, market, and date range.": "इस फसल, मंडी और तारीख़ों के लिए भावों का इतिहास नहीं मिला।",
+    "Latest mandi arrival date: {date}": "मंडी की नवीनतम आवक तारीख: {date}",
+    "No current records were returned for this crop and state. The source may not have published a report yet.": "इस फसल और राज्य के लिए अभी रिकॉर्ड नहीं मिला। संभव है कि नई रिपोर्ट प्रकाशित न हुई हो।",
+    "⭐ Highest guide in this view: {market}, {district} · ₹{price:,.0f}/quintal": "⭐ इस सूची का सबसे अधिक भाव-संकेत: {market}, {district} · ₹{price:,.0f}/क्विंटल",
+    "Download latest mandi report (CSV)": "मंडी की नवीनतम रिपोर्ट डाउनलोड करें (CSV)",
+    "Welcome": "स्वागत है",
+    "Sign in": "साइन इन",
+    "Create account": "खाता बनाएँ",
+    "Username": "उपयोगकर्ता नाम",
+    "Password": "पासवर्ड",
+    "Choose a username": "उपयोगकर्ता नाम चुनें",
+    "Create a password": "पासवर्ड बनाएँ",
+    "Confirm password": "पासवर्ड की पुष्टि करें",
+    "Sign in to compare mandi prices and explore practical farming insights.": "मंडी भावों की तुलना और खेती से जुड़ी उपयोगी जानकारी के लिए साइन इन करें।",
+    "Your account stays on this device.": "आपका खाता इसी डिवाइस पर रहता है।",
+    "We couldn't sign you in with those details.": "इन जानकारियों से साइन इन नहीं हो पाया।",
+    "The passwords don't match.": "दोनों पासवर्ड मेल नहीं खाते।",
+    "Choose a username between 3 and 40 characters.": "3 से 40 अक्षरों का उपयोगकर्ता नाम चुनें।",
+    "Use only letters, numbers, periods, underscores, or hyphens in the username.": "उपयोगकर्ता नाम में केवल अक्षर, अंक, बिंदु, अंडरस्कोर या हाइफ़न इस्तेमाल करें।",
+    "Use a password with at least 8 characters.": "कम से कम 8 अक्षरों का पासवर्ड इस्तेमाल करें।",
+    "That username is already registered. Try signing in instead.": "यह उपयोगकर्ता नाम पहले से पंजीकृत है। साइन इन करने की कोशिश करें।",
+    "No districts are available for this state in the bundled mandi dataset.": "इस राज्य के लिए मंडी डेटा में जिले उपलब्ध नहीं हैं।",
+    "The bundled crop dataset is missing state or crop options, so a farm profile cannot be created.": "फसल डेटा में राज्य या फसल की जानकारी नहीं है, इसलिए खेती की प्रोफ़ाइल नहीं बन सकती।",
+    "Weather unavailable": "मौसम की जानकारी उपलब्ध नहीं है",
+    "No material rain or heat signal in the 3-day forecast": "तीन दिन के पूर्वानुमान में बारिश या गर्मी का कोई बड़ा संकेत नहीं है",
+    "{rain} mm forecast rain over 3 days": "अगले 3 दिनों में {rain} मिमी बारिश का अनुमान",
+    "highs up to {temperature}°C": "अधिकतम तापमान {temperature}°C तक",
+    "Could not load the price data: {error}": "भाव डेटा लोड नहीं हो पाया: {error}",
+    "This file does not contain enough usable crop and location data to build your farm profile.": "इस फ़ाइल में खेती की प्रोफ़ाइल के लिए पर्याप्त फसल और स्थान डेटा नहीं है।",
+    "No usable crop names were found in this CSV.": "इस CSV में उपयोग योग्य फसल के नाम नहीं मिले।",
+    "Market report state": "भाव रिपोर्ट का राज्य",
+    "This crop is from your local dataset; it is not in the API's current commodity list. The price endpoint will still be queried for it.": "यह फसल स्थानीय डेटा में है, API की सूची में नहीं। फिर भी इसके भाव खोजे जाएँगे।",
+    "The Mandi API did not return its supported state list.": "मंडी API से समर्थित राज्यों की सूची नहीं मिली।",
+    "All mandis": "सभी मंडियाँ",
+    "Price report state": "भाव रिपोर्ट का राज्य",
+    "History date range": "इतिहास की तारीख़ सीमा",
+    "Source: {source} · checked {time}": "स्रोत: {source} · जाँच का समय {time}",
+    "Mandi report date": "मंडी रिपोर्ट की तारीख",
+    "Mandi price history · {market}": "मंडी भावों का इतिहास · {market}",
+    "State average aggregated by the API across reporting mandis.": "API ने रिपोर्ट करने वाली मंडियों का राज्य-औसत निकाला है।",
+    "The selected mandi price service is temporarily unavailable: {error}": "चुनी गई मंडी भाव सेवा अभी उपलब्ध नहीं है: {error}",
+    "Arrival date": "आवक की तारीख",
+    "Good to see you, {user}": "वापसी पर स्वागत है, {user}",
+    "Market prices vary; verify current prices with the selected mandi.": "मंडी भाव बदलते रहते हैं; चुनी हुई मंडी से वर्तमान भाव की पुष्टि करें।",
+    "Rainfed": "वर्षा आधारित", "Some irrigation": "कुछ सिंचाई", "Reliable irrigation": "नियमित सिंचाई",
+    "Not sure": "पता नहीं", "Sandy": "रेतीली", "Loamy": "दोमट", "Clay": "चिकनी मिट्टी",
+    "Black": "काली मिट्टी", "Alluvial": "जलोढ़ मिट्टी", "Red": "लाल मिट्टी", "Other": "अन्य",
+}
+
+
+def tr(text: str) -> str:
+    """Translate a visible English label when Hindi is selected."""
+    if st.session_state.get("ui_language") == "हिन्दी":
+        return HINDI.get(text, text)
+    return text
+
+
+def render_language_picker(container=st) -> None:
+    container.selectbox("Language / भाषा", ["English", "हिन्दी"], key="ui_language", label_visibility="collapsed")
+
+
+def render_page_intro() -> None:
+    st.title(tr("🌾 Smart Farming Dashboard"))
+    st.caption(tr("Local mandi prices and simple weather-aware planning guidance to help you compare nearby markets."))
+    with st.expander(tr("How to use this dashboard"), expanded=False):
+        st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
+        st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
+        st.markdown("3. " + tr("Review the latest published mandi reports and the historical price chart."))
+        st.markdown("4. " + tr("Use the download button to save the market comparison as a CSV file."))
+        st.info(tr("The weather guide is an illustrative planning aid, not an official mandi quote. Check the reported price and local conditions before making a sale decision."))
+
+
+def display_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    """Translate common table headings while preserving the underlying data."""
+    if st.session_state.get("ui_language") != "हिन्दी":
+        return frame
+    hindi_columns = {
+        "State": "राज्य", "District": "जिला", "Market": "मंडी", "Commodity": "फसल",
+        "Arrival Date": "आवक की तारीख", "Modal Price": "मंडी भाव",
+        "Min Price": "न्यूनतम भाव", "Max Price": "अधिकतम भाव",
+        "Reported price (₹/quintal)": "बताया गया भाव (₹/क्विंटल)",
+        "Weather-adjusted guide (₹/quintal)": "मौसम आधारित संकेत (₹/क्विंटल)",
+        "Weather guide (₹/quintal)": "मौसम आधारित संकेत (₹/क्विंटल)",
+        "Previous modal price": "पिछला मंडी भाव", "Latest modal price": "नवीनतम मंडी भाव",
+        "Change (₹/quintal)": "बदलाव (₹/क्विंटल)", "Change (%)": "बदलाव (%)",
+        "Matched variety/grade rows": "मिलान की गई किस्म/ग्रेड प्रविष्टियाँ",
+        "Variety": "किस्म", "Grade": "ग्रेड", "Market records": "मंडी रिकॉर्ड",
+    }
+    return frame.rename(columns=hindi_columns)
+
 
 def get_database_url() -> str | None:
     """Read a shared database URL from the host environment or Streamlit secrets."""
@@ -258,12 +430,12 @@ def save_farmer_profile(username: str, profile: dict) -> None:
 
 def render_farmer_setup(username: str, dataframe: pd.DataFrame, existing: dict | None = None) -> None:
     """Collect a small profile before opening the personalized dashboard."""
-    st.title("Let’s set up your farm profile")
-    st.write("A few details help us start with the right crop, local mandi prices, and weather location.")
+    st.title(tr("Let’s set up your farm profile"))
+    st.write(tr("A few details help us start with the right crop, local mandi prices, and weather location."))
     states = sorted(dataframe["State"].dropna().unique())
     crops = sorted(dataframe["Commodity"].dropna().unique())
     if not states or not crops:
-        st.error("The bundled crop dataset is missing state or crop options, so a farm profile cannot be created.")
+        st.error(tr("The bundled crop dataset is missing state or crop options, so a farm profile cannot be created."))
         return
 
     def reset_profile_district() -> None:
@@ -274,28 +446,28 @@ def render_farmer_setup(username: str, dataframe: pd.DataFrame, existing: dict |
     default_state = existing["state"] if existing and existing["state"] in states else states[0]
     if st.session_state.get("profile_state") not in states:
         st.session_state["profile_state"] = default_state
-    state = st.selectbox("Your state", states, key="profile_state", on_change=reset_profile_district)
+    state = st.selectbox(tr("Your state"), states, key="profile_state", on_change=reset_profile_district)
     districts = sorted(dataframe.loc[dataframe["State"] == state, "District"].dropna().astype(str).unique())
     if not districts:
-        st.warning("No districts are available for this state in the bundled mandi dataset.")
+        st.warning(tr("No districts are available for this state in the bundled mandi dataset."))
         return
     default_district = existing["district"] if existing and existing["district"] in districts else districts[0]
     if st.session_state.get("profile_district") not in districts:
         st.session_state["profile_district"] = default_district
     with st.container(border=True):
         col1, col2 = st.columns(2)
-        district = col2.selectbox("Your district", districts, key="profile_district")
+        district = col2.selectbox(tr("Your district"), districts, key="profile_district")
         crop_index = crops.index(existing["crop"]) if existing and existing["crop"] in crops else 0
-        crop = col1.selectbox("Main crop you want to track", crops, index=crop_index, key="profile_crop")
-        farm_size = col2.number_input("Farm size (acres)", min_value=0.1, max_value=100000.0,
+        crop = col1.selectbox(tr("Main crop you want to track"), crops, index=crop_index, key="profile_crop")
+        farm_size = col2.number_input(tr("Farm size (acres)"), min_value=0.1, max_value=100000.0,
                                       value=float(existing["farm_size_acres"]) if existing else 1.0, step=0.5)
         irrigation_options = ["Rainfed", "Some irrigation", "Reliable irrigation"]
         soil_options = ["Not sure", "Sandy", "Loamy", "Clay", "Black", "Alluvial", "Red", "Other"]
         irrigation_index = irrigation_options.index(existing["irrigation"]) if existing and existing["irrigation"] in irrigation_options else 0
         soil_index = soil_options.index(existing["soil_type"]) if existing and existing["soil_type"] in soil_options else 0
-        irrigation = col1.selectbox("Water access", irrigation_options, index=irrigation_index)
-        soil_type = col2.selectbox("Soil type (if known)", soil_options, index=soil_index)
-        submitted = st.button("Save profile and continue", type="primary", use_container_width=True)
+        irrigation = col1.selectbox(tr("Water access"), irrigation_options, index=irrigation_index, format_func=tr)
+        soil_type = col2.selectbox(tr("Soil type (if known)"), soil_options, index=soil_index, format_func=tr)
+        submitted = st.button(tr("Save profile and continue"), type="primary", use_container_width=True)
     if submitted:
         save_farmer_profile(username, {
             "state": state, "district": district, "crop": crop, "farm_size_acres": farm_size,
@@ -303,7 +475,7 @@ def render_farmer_setup(username: str, dataframe: pd.DataFrame, existing: dict |
         })
         st.session_state.pop("editing_profile", None)
         st.rerun()
-    st.caption("Your profile is saved with your account. You can change it later from the sidebar.")
+    st.caption(tr("Your profile is saved with your account. You can change it later from the sidebar."))
 
 
 @st.cache_data
@@ -437,11 +609,11 @@ def weather_price_factor(data: dict) -> tuple[float, str]:
     rain = sum(float(value or 0) for value in daily.get("precipitation_sum", [])[:3])
     high_temps = [float(value) for value in daily.get("temperature_2m_max", [])[:3] if value is not None]
     adjustment = 0.03 if rain >= 20 else 0.015 if rain >= 5 else 0.0
-    reasons = [f"{rain:.0f} mm forecast rain over 3 days" ] if adjustment else []
+    reasons = [tr("{rain} mm forecast rain over 3 days").format(rain=f"{rain:.0f}")] if adjustment else []
     if high_temps and max(high_temps) >= 38:
         adjustment += 0.01
-        reasons.append(f"highs up to {max(high_temps):.0f}°C")
-    return 1 + adjustment, "; ".join(reasons) if reasons else "No material rain or heat signal in the 3-day forecast"
+        reasons.append(tr("highs up to {temperature}°C").format(temperature=f"{max(high_temps):.0f}"))
+    return 1 + adjustment, "; ".join(reasons) if reasons else tr("No material rain or heat signal in the 3-day forecast")
 
 
 def get_profile_weather(profile: dict) -> tuple[dict, dict] | None:
@@ -456,9 +628,9 @@ def get_profile_weather(profile: dict) -> tuple[dict, dict] | None:
 def render_live_price_feed(commodity: str, commodity_options: list[str], profile: dict,
                            weather_factor: float = 1.0) -> None:
     """Refresh price reports every five minutes and use the API's own lookup/history endpoints."""
-    st.subheader("Latest published mandi prices")
-    st.caption("Mandi API · checked every 5 minutes · prices change when new mandi reports are published.")
-    if st.button("Refresh now", key="refresh_prices"):
+    st.subheader(tr("Latest published mandi prices"))
+    st.caption(tr("Mandi API · checked every 5 minutes · prices change when new mandi reports are published."))
+    if st.button(tr("Refresh now"), key="refresh_prices"):
         get_mandi_api_states.clear()
         get_mandi_api_commodities.clear()
         get_mandi_api_markets.clear()
@@ -467,18 +639,18 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
     try:
         api_states = get_mandi_api_states()
         if not api_states:
-            st.warning("The Mandi API did not return its supported state list.")
+            st.warning(tr("The Mandi API did not return its supported state list."))
             return
         preferred_state = profile["state"] if profile["state"] in api_states else ("Maharashtra" if "Maharashtra" in api_states else api_states[0])
-        live_state = st.selectbox("Price report state", api_states, index=api_states.index(preferred_state), key="live_api_state")
+        live_state = st.selectbox(tr("Price report state"), api_states, index=api_states.index(preferred_state), key="live_api_state")
 
         api_commodities = get_mandi_api_commodities(live_state)
         commodity_choices = sorted(set(api_commodities) | set(commodity_options))
         preferred_crop = commodity if commodity in commodity_choices else (api_commodities[0] if api_commodities else commodity_choices[0])
-        live_commodity = st.selectbox("Crop / commodity", commodity_choices,
+        live_commodity = st.selectbox(tr("Crop / commodity"), commodity_choices,
                                       index=commodity_choices.index(preferred_crop), key="live_api_commodity")
         if live_commodity not in api_commodities:
-            st.caption("This crop is from your local dataset; it is not in the API's current commodity list. The price endpoint will still be queried for it.")
+            st.caption(tr("This crop is from your local dataset; it is not in the API's current commodity list. The price endpoint will still be queried for it."))
 
         market_rows = get_mandi_api_markets(live_state)
         district_names = sorted({str(row.get("district", "")).strip() for row in market_rows if row.get("district")})
@@ -487,14 +659,14 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
         district_key = "live_api_district"
         if st.session_state.get(district_key) not in district_options:
             st.session_state[district_key] = district_default
-        live_district = st.selectbox("District", district_options, key=district_key)
+        live_district = st.selectbox(tr("District"), district_options, format_func=tr, key=district_key)
         eligible_markets = [row for row in market_rows if live_district == "All districts" or str(row.get("district", "")).strip() == live_district]
         market_values = list(dict.fromkeys(str(row.get("market", "")) for row in eligible_markets if row.get("market")))
         market_labels = {str(row.get("market", "")): f"{str(row.get('market', '')).strip()} · {str(row.get('district', '')).strip()}" for row in eligible_markets if row.get("market")}
         market_options = [None] + market_values
         if st.session_state.get("live_api_market") not in market_options:
             st.session_state["live_api_market"] = None
-        live_market = st.selectbox("Mandi", market_options, format_func=lambda value: "All mandis" if value is None else market_labels.get(value, value.strip()), key="live_api_market")
+        live_market = st.selectbox(tr("Mandi"), market_options, format_func=lambda value: tr("All mandis") if value is None else market_labels.get(value, value.strip()), key="live_api_market")
 
         initial_prices, _ = get_mandi_api_prices(live_commodity, live_state, market=live_market)
         if live_district != "All districts":
@@ -503,12 +675,12 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
         variety_options = ["All varieties"] + varieties
         if st.session_state.get("live_api_variety") not in variety_options:
             st.session_state["live_api_variety"] = "All varieties"
-        live_variety = st.selectbox("Variety", variety_options, key="live_api_variety")
+        live_variety = st.selectbox(tr("Variety"), variety_options, format_func=tr, key="live_api_variety")
         date_values = sorted(initial_prices["Arrival Date"].dropna().dt.strftime("%Y-%m-%d").unique(), reverse=True) if not initial_prices.empty else []
         date_options = ["Latest available"] + date_values
         if st.session_state.get("live_api_date") not in date_options:
             st.session_state["live_api_date"] = "Latest available"
-        live_date = st.selectbox("Arrival date", date_options, key="live_api_date")
+        live_date = st.selectbox(tr("Arrival date"), date_options, format_func=tr, key="live_api_date")
         selected_date = None if live_date == "Latest available" else live_date
         live_prices, meta = get_mandi_api_prices(
             live_commodity, live_state, market=live_market,
@@ -519,7 +691,7 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
             live_prices = live_prices[live_prices["District"].astype(str).str.strip() == live_district]
         source_name = "mandi-api.onrender.com"
 
-        st.markdown("#### Price history")
+        st.markdown(f"#### {tr('Price history')}")
         if not initial_prices.empty:
             last_report = initial_prices["Arrival Date"].max().date()
             first_report = initial_prices["Arrival Date"].min().date()
@@ -528,7 +700,7 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
             first_report = last_report - timedelta(days=30)
         range_start = max(first_report, last_report - timedelta(days=30))
         range_value = st.date_input(
-            "History date range", value=(range_start, last_report),
+            tr("History date range"), value=(range_start, last_report),
             key=f"live_history_range_{live_state}_{live_commodity}",
         )
         if isinstance(range_value, tuple) and len(range_value) == 2:
@@ -538,18 +710,21 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
                     live_state, live_commodity, live_market, from_date.isoformat(), to_date.isoformat()
                 )
                 if not history.empty:
-                    history_title = f"{live_commodity} price history · {live_market.strip() if live_market else live_state + ' average'}"
+                    history_title = tr("Mandi price history · {market}").format(
+                        market=live_market.strip() if live_market else live_state + (" औसत" if st.session_state.get("ui_language") == "हिन्दी" else " average"))
                     history_chart = px.line(history, x="Arrival Date", y="Modal Price", markers=True,
                                             title=history_title, hover_data=[c for c in ("Min Price", "Max Price", "Market records") if c in history])
-                    history_chart.update_layout(xaxis_title="Mandi report date", yaxis_title="Modal price (₹/quintal)")
+                    history_chart.update_layout(xaxis_title=tr("Mandi report date"), yaxis_title=tr("Modal price (₹/quintal)"),
+                                                template="plotly_dark" if st.session_state.get("dark_mode") else "plotly_white")
                     st.plotly_chart(history_chart, use_container_width=True)
                     if history_meta.get("mode") == "STATE_AGGREGATE":
-                        st.caption("State average aggregated by the API across reporting mandis.")
+                        st.caption(tr("State average aggregated by the API across reporting mandis."))
                 else:
-                    st.info("No history was returned for this crop, market, and date range.")
-        st.caption(f"Source: {source_name} · checked {datetime.now().astimezone().strftime('%d %b %Y, %I:%M %p %Z')}")
+                    st.info(tr("No history was returned for this crop, market, and date range."))
+        checked = datetime.now().astimezone().strftime('%d %b %Y, %I:%M %p %Z')
+        st.caption(tr("Source: {source} · checked {time}").format(source=source_name, time=checked))
         if live_prices.empty:
-            st.info("No current records were returned for this crop and state. The source may not have published a report yet.")
+            st.info(tr("No current records were returned for this crop and state. The source may not have published a report yet."))
             return
         report_date = live_prices["Arrival Date"].max() if "Arrival Date" in live_prices else None
         latest = live_prices[live_prices["Arrival Date"] == report_date].copy() if pd.notna(report_date) else live_prices.copy()
@@ -560,18 +735,20 @@ def render_live_price_feed(commodity: str, commodity_options: list[str], profile
                 latest.loc[home_district_rows, "Modal Price"] * weather_factor
             ).round(0)
         if pd.notna(report_date):
-            st.caption(f"Latest mandi arrival date: {report_date:%d %b %Y}")
+            st.caption(tr("Latest mandi arrival date: {date}").format(date=f"{report_date:%d %b %Y}"))
         if "Modal Price" in latest and not latest.empty:
             best = latest.loc[latest["Weather guide (₹/quintal)"].idxmax()]
-            st.success(f"⭐ Highest guide in this view: {best.get('Market', 'Market')}, {best.get('District', '')} · ₹{best['Weather guide (₹/quintal)']:,.0f}/quintal")
-        st.dataframe(latest, use_container_width=True, hide_index=True)
+            message = tr("⭐ Highest guide in this view: {market}, {district} · ₹{price:,.0f}/quintal")
+            st.success(message.format(market=best.get('Market', 'Market'), district=best.get('District', ''),
+                                      price=best['Weather guide (₹/quintal)']))
+        st.dataframe(display_columns(latest), use_container_width=True, hide_index=True)
         st.download_button(
-            "Download latest mandi report (CSV)", latest.to_csv(index=False).encode("utf-8-sig"),
+            tr("Download latest mandi report (CSV)"), latest.to_csv(index=False).encode("utf-8-sig"),
             file_name=f"{commodity.lower().replace(' ', '-')}-latest-mandi-prices.csv",
             mime="text/csv", key="download_live_prices",
         )
     except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
-        st.warning(f"The selected mandi price service is temporarily unavailable: {exc}")
+        st.warning(tr("The selected mandi price service is temporarily unavailable: {error}").format(error=exc))
 
 
 def build_daily_price_changes(current: pd.DataFrame, previous: pd.DataFrame) -> tuple[pd.DataFrame, pd.Timestamp | None]:
@@ -607,112 +784,119 @@ def build_daily_price_changes(current: pd.DataFrame, previous: pd.DataFrame) -> 
 
 
 def render_login_page() -> None:
+    lang_left, lang_right = st.columns([5, 1])
+    with lang_right:
+        render_language_picker()
     left, center, right = st.columns([1, 1.8, 1], vertical_alignment="center")
     with center:
         with st.container(border=True, key="login_card"):
             st.markdown('<div class="login-mark">🌾</div>', unsafe_allow_html=True)
-            st.markdown('<div class="login-eyebrow">SMART FARMING · BETTER DECISIONS</div>', unsafe_allow_html=True)
-            st.title("Welcome")
+            st.markdown(f'<div class="login-eyebrow">{tr("SMART FARMING · BETTER DECISIONS")}</div>', unsafe_allow_html=True)
+            st.title(tr("Welcome"))
             st.markdown(
-                '<div class="login-note">Sign in to compare mandi prices and explore practical farming insights.</div>',
+                f'<div class="login-note">{tr("Sign in to compare mandi prices and explore practical farming insights.")}</div>',
                 unsafe_allow_html=True,
             )
 
-            sign_in, register = st.tabs(["Sign in", "Create account"])
+            sign_in, register = st.tabs([tr("Sign in"), tr("Create account")])
             with sign_in:
                 with st.form("sign_in_form"):
-                    username = st.text_input("Username", key="sign_in_username")
-                    password = st.text_input("Password", type="password", key="sign_in_password")
-                    submitted = st.form_submit_button("Sign in", type="primary", use_container_width=True)
+                    username = st.text_input(tr("Username"), key="sign_in_username")
+                    password = st.text_input(tr("Password"), type="password", key="sign_in_password")
+                    submitted = st.form_submit_button(tr("Sign in"), type="primary", use_container_width=True)
                 if submitted:
                     if authenticate(username, password):
                         st.rerun()
-                    st.error("We couldn't sign you in with those details.")
+                    st.error(tr("We couldn't sign you in with those details."))
 
             with register:
                 with st.form("register_form"):
-                    new_username = st.text_input("Choose a username", key="register_username")
-                    new_password = st.text_input("Create a password", type="password", key="register_password")
-                    confirm_password = st.text_input("Confirm password", type="password", key="register_confirm")
-                    submitted = st.form_submit_button("Create account", type="primary", use_container_width=True)
+                    new_username = st.text_input(tr("Choose a username"), key="register_username")
+                    new_password = st.text_input(tr("Create a password"), type="password", key="register_password")
+                    confirm_password = st.text_input(tr("Confirm password"), type="password", key="register_confirm")
+                    submitted = st.form_submit_button(tr("Create account"), type="primary", use_container_width=True)
                 if submitted:
                     if new_password != confirm_password:
-                        st.error("The passwords don't match.")
+                        st.error(tr("The passwords don't match."))
                     else:
                         created, message = create_account(new_username, new_password)
                         if created:
                             st.session_state["authenticated_user"] = message
                             st.rerun()
-                        st.error(message)
+                        st.error(tr(message))
             st.markdown(
-                '<div class="login-note" style="font-size:.76rem;margin:.9rem 0 0">Your account stays on this device.</div>',
+                f'<div class="login-note" style="font-size:.76rem;margin:.9rem 0 0">{tr("Your account stays on this device.")}</div>',
                 unsafe_allow_html=True,
             )
 
 
 def render_dashboard() -> None:
     user = st.session_state["authenticated_user"]
+    _, language_col = st.columns([5, 1])
+    with language_col:
+        render_language_picker()
+    render_page_intro()
     with st.sidebar:
         st.session_state.setdefault("dark_mode", False)
-        dark_mode = st.toggle("🌙 Dark mode", key="dark_mode")
+        dark_mode = st.toggle(tr("🌙 Dark mode"), key="dark_mode")
         apply_green_theme(dark_mode)
-        st.write(f"Signed in as **{user}**")
-        if st.button("Sign out", use_container_width=True):
+        st.write(f"**{tr('Signed in as')}: {user}**")
+        if st.button(tr("Sign out"), use_container_width=True):
             st.session_state.pop("authenticated_user", None)
             st.rerun()
 
     try:
         df = load_data(None, str(DEFAULT_DATA))
     except (OSError, pd.errors.ParserError, ValueError) as exc:
-        st.error(f"Could not load the price data: {exc}")
+        st.error(tr("Could not load the price data: {error}").format(error=exc))
         st.stop()
 
     if df.empty or df["State"].dropna().empty or df["Commodity"].dropna().empty:
-        st.error("This file does not contain enough usable crop and location data to build your farm profile.")
+        st.error(tr("This file does not contain enough usable crop and location data to build your farm profile."))
         st.stop()
     profile = get_farmer_profile(user)
     if not profile or st.session_state.get("editing_profile", False):
         render_farmer_setup(user, df, profile)
         st.stop()
     weather_result = get_profile_weather(profile)
-    weather_factor, weather_reason = weather_price_factor(weather_result[1]) if weather_result else (1.0, "Weather unavailable")
+    weather_factor, weather_reason = weather_price_factor(weather_result[1]) if weather_result else (1.0, tr("Weather unavailable"))
 
     with st.sidebar:
         st.divider()
-        st.markdown("**Your farm profile**")
+        st.markdown(f"**{tr('Your farm profile')}**")
         st.caption(f"{profile['crop']} · {profile['district']}, {profile['state']}")
-        st.caption(f"{profile['farm_size_acres']:g} acres · {profile['irrigation']} water")
-        st.caption(f"Soil: {profile['soil_type']}")
-        if st.button("Edit farm profile", use_container_width=True):
+        st.caption(f"{profile['farm_size_acres']:g} {tr('acres')} · {tr(profile['irrigation'])} {tr('water')}")
+        st.caption(f"{tr('Soil')}: {tr(profile['soil_type'])}")
+        if st.button(tr("Edit farm profile"), use_container_width=True):
             st.session_state["editing_profile"] = True
             st.rerun()
 
-    st.title(f"Good to see you, {user}")
-    st.caption(f"Your dashboard is set up for **{profile['crop']}** in **{profile['district']}, {profile['state']}**.")
+    st.caption(tr("Your dashboard is set up for **{crop}** in **{district}, {state}**.").format(
+        crop=profile["crop"], district=profile["district"], state=profile["state"]))
 
-    st.sidebar.header("Filters")
+    st.sidebar.header(tr("Filters"))
     commodity_options = sorted(df["Commodity"].dropna().unique())
     if not commodity_options:
-        st.error("No usable crop names were found in this CSV.")
+        st.error(tr("No usable crop names were found in this CSV."))
         st.stop()
     crop_index = commodity_options.index(profile["crop"]) if profile["crop"] in commodity_options else 0
-    selected_commodity = st.sidebar.selectbox("Crop / commodity", commodity_options, index=crop_index,
-                                               help="Choose the crop to compare across mandis.")
+    selected_commodity = st.sidebar.selectbox(tr("Crop / commodity"), commodity_options, index=crop_index,
+                                               help=tr("Choose the crop to compare across mandis."))
     commodity_df = df[df["Commodity"] == selected_commodity]
     state_options = sorted(commodity_df["State"].dropna().unique())
     state_default = [profile["state"]] if profile["state"] in state_options else state_options
-    selected_states = st.sidebar.multiselect("State", state_options, default=state_default)
+    selected_states = st.sidebar.multiselect(tr("State"), state_options, default=state_default)
     filtered = commodity_df[commodity_df["State"].isin(selected_states)]
 
     districts = sorted(filtered["District"].dropna().unique())
     district_default = [profile["district"]] if profile["district"] in districts else districts
-    selected_districts = st.sidebar.multiselect("District", districts, default=district_default)
+    selected_districts = st.sidebar.multiselect(tr("District"), districts, default=district_default)
     filtered = filtered[filtered["District"].isin(selected_districts)]
 
     selected_varieties = None
     varieties = sorted(filtered["Variety"].dropna().unique()) if "Variety" in filtered else []
     if varieties:
-        selected_varieties = st.sidebar.multiselect("Variety", varieties, default=varieties)
+        selected_varieties = st.sidebar.multiselect(tr("Variety"), varieties, default=varieties)
         filtered = filtered[filtered["Variety"].isin(selected_varieties)]
 
     latest_date = df["Arrival_Date"].max()
@@ -720,14 +904,14 @@ def render_dashboard() -> None:
     market_count = snapshot["Market"].nunique()
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Latest data date", latest_date.strftime("%d %b %Y"))
-    col2.metric("Markets in view", f"{market_count:,}")
-    col3.metric("Average modal price", f"₹{snapshot['Modal Price'].mean():,.0f}" if not snapshot.empty else "—")
-    col4.metric("Records in view", f"{len(snapshot):,}")
+    col1.metric(tr("Latest data date"), latest_date.strftime("%d %b %Y"))
+    col2.metric(tr("Markets in view"), f"{market_count:,}")
+    col3.metric(tr("Average modal price"), f"₹{snapshot['Modal Price'].mean():,.0f}" if not snapshot.empty else "—")
+    col4.metric(tr("Records in view"), f"{len(snapshot):,}")
 
-    st.subheader(f"Market comparison: {selected_commodity}")
+    st.subheader(tr("Market comparison: {crop}").format(crop=selected_commodity))
     if snapshot.empty:
-        st.info("No records match these filters. Try selecting another state or district in the sidebar.")
+        st.info(tr("No records match these filters. Try selecting another state or district in the sidebar."))
     else:
         price_fields = {name: (name, "mean") for name in ("Min Price", "Max Price") if name in snapshot}
         price_fields["Modal Price"] = ("Modal Price", "mean")
@@ -745,37 +929,41 @@ def render_dashboard() -> None:
         home_markets = compare[(compare["State"] == profile["state"]) & (compare["District"] == profile["district"])]
         recommendation = home_markets.iloc[0] if not home_markets.empty else high
         with st.container(border=True):
-            st.markdown("### ⭐ Best mandi match for your filters")
+            st.markdown(f"### {tr('⭐ Best mandi match for your filters')}")
             rec_col1, rec_col2, rec_col3 = st.columns([2, 1, 1])
             rec_col1.markdown(f"**{recommendation['Market']}**  \n{recommendation['District']}, {recommendation['State']}")
-            rec_col2.metric("Weather-adjusted guide", f"₹{recommendation[rank_price]:,.0f}/quintal")
-            rec_col3.metric("Data date", latest_date.strftime("%d %b %Y"))
+            rec_col2.metric(tr("Weather-adjusted guide"), f"₹{recommendation[rank_price]:,.0f}/क्विंटल" if st.session_state.get("ui_language") == "हिन्दी" else f"₹{recommendation[rank_price]:,.0f}/quintal")
+            rec_col3.metric(tr("Data date"), latest_date.strftime("%d %b %Y"))
             if not home_markets.empty:
-                st.caption(f"Based on a reported mandi price of ₹{recommendation['Reported price (₹/quintal)']:,.0f}/quintal. Weather signal: {weather_reason}. This is a planning guide, not a market quote.")
+                caption = tr("Based on a reported mandi price of ₹{price:,.0f}/quintal. Weather signal: {reason}. This is a planning guide, not a market quote.")
+                st.caption(caption.format(price=recommendation["Reported price (₹/quintal)"], reason=weather_reason))
             else:
-                st.caption(f"Your home district has no matching record in this data view. Showing the highest reported price in your selected filters for {selected_commodity}. Compare transport, quality, and arrivals before choosing a market.")
+                caption = tr("Your home district has no matching record in this data view. Showing the highest reported price in your selected filters for {crop}. Compare transport, quality, and arrivals before choosing a market.")
+                st.caption(caption.format(crop=selected_commodity))
             if low["Market"] != high["Market"]:
-                st.caption(f"Price range in selected markets: ₹{low['Modal Price']:,.0f}–₹{high['Modal Price']:,.0f}/quintal.")
+                caption = tr("Price range in selected markets: ₹{low:,.0f}–₹{high:,.0f}/quintal.")
+                st.caption(caption.format(low=low["Modal Price"], high=high["Modal Price"]))
         fig = px.bar(
             compare.head(25).sort_values(rank_price),
             x=rank_price,
             y="Market",
             color="State",
             color_discrete_sequence=["#1B4332", "#40916C", "#74A892", "#A8CDB4", "#E9C46A"],
-            title="Highest mandi prices · ₹ per quintal",
+            title=tr("Highest mandi prices · ₹ per quintal"),
             text=rank_price,
             hover_data=["Reported price (₹/quintal)", "District", "State"],
         )
-        fig.update_layout(xaxis_title="Price guide (₹ per quintal)", yaxis_title="", showlegend=False,
+        fig.update_layout(xaxis_title=tr("Price guide (₹ per quintal)"), yaxis_title="", showlegend=False,
                           template="plotly_dark" if dark_mode else "plotly_white", margin=dict(l=10, r=20, t=55, b=20))
         fig.update_traces(orientation="h", texttemplate="₹%{x:,.0f}", textposition="outside",
                           marker_line_width=0, cliponaxis=False)
         fig.update_yaxes(automargin=True, categoryorder="total ascending")
         st.plotly_chart(fig, use_container_width=True)
-        st.caption(f"Weather guide applies only to your home district. Rule of thumb: +1.5% for 5–19 mm forecast rain, +3% for 20+ mm, and +1% for forecast highs of 38°C or more. Signal: {weather_reason}. Other districts show reported prices unchanged.")
-        st.dataframe(compare, use_container_width=True, hide_index=True, height=420)
+        caption = tr("Weather guide applies only to your home district. Rule of thumb: +1.5% for 5–19 mm forecast rain, +3% for 20+ mm, and +1% for forecast highs of 38°C or more. Signal: {reason}. Other districts show reported prices unchanged.")
+        st.caption(caption.format(reason=weather_reason))
+        st.dataframe(display_columns(compare), use_container_width=True, hide_index=True, height=420)
         st.download_button(
-            "Download filtered market comparison (CSV)",
+            tr("Download filtered market comparison (CSV)"),
             compare.to_csv(index=False).encode("utf-8-sig"),
             file_name=f"{selected_commodity.lower().replace(' ', '-')}-market-comparison.csv",
             mime="text/csv",
@@ -795,29 +983,30 @@ def render_dashboard() -> None:
             prior_filtered = prior_filtered[prior_filtered["Variety"].isin(selected_varieties)]
         changes, previous_date = build_daily_price_changes(snapshot, prior_filtered)
         if not changes.empty:
-            st.subheader("Price movement since the previous report")
-            st.caption(f"Compares matching market, crop, variety, and grade records from {previous_date:%d %b %Y} to {latest_date:%d %b %Y}. This is historical movement, not a forecast.")
+            st.subheader(tr("Price movement since the previous report"))
+            caption = tr("Compares matching market, crop, variety, and grade records from {start} to {end}. This is historical movement, not a forecast.")
+            st.caption(caption.format(start=f"{previous_date:%d %b %Y}", end=f"{latest_date:%d %b %Y}"))
             rising = int((changes["Change (₹/quintal)"] > 0).sum())
             falling = int((changes["Change (₹/quintal)"] < 0).sum())
             unchanged = int((changes["Change (₹/quintal)"].round(2) == 0).sum())
             move_cols = st.columns(4)
-            move_cols[0].metric("Markets matched", f"{len(changes):,}")
-            move_cols[1].metric("Prices higher", f"{rising:,}")
-            move_cols[2].metric("Prices lower", f"{falling:,}")
-            move_cols[3].metric("Unchanged", f"{unchanged:,}")
-            st.dataframe(changes.round({"Previous modal price": 0, "Latest modal price": 0,
-                                        "Change (₹/quintal)": 0, "Change (%)": 1}),
+            move_cols[0].metric(tr("Markets matched"), f"{len(changes):,}")
+            move_cols[1].metric(tr("Prices higher"), f"{rising:,}")
+            move_cols[2].metric(tr("Prices lower"), f"{falling:,}")
+            move_cols[3].metric(tr("Unchanged"), f"{unchanged:,}")
+            st.dataframe(display_columns(changes.round({"Previous modal price": 0, "Latest modal price": 0,
+                                        "Change (₹/quintal)": 0, "Change (%)": 1})),
                          use_container_width=True, hide_index=True)
         else:
-            st.info("No like-for-like market records are available to compare with the previous report.")
+            st.info(tr("No like-for-like market records are available to compare with the previous report."))
 
-    with st.expander("Latest published mandi prices", expanded=True):
+    with st.expander(tr("Latest published mandi prices"), expanded=True):
         render_live_price_feed(selected_commodity, commodity_options, profile, weather_factor)
 
-    st.subheader("Price history")
+    st.subheader(tr("Price history"))
     date_count = df["Arrival_Date"].nunique()
     if date_count < 2:
-        st.info("Historical chart appears when multiple reporting dates are available.")
+        st.info(tr("Historical chart appears when multiple reporting dates are available."))
     else:
         history = filtered.groupby("Arrival_Date", as_index=False)["Modal Price"].mean()
         history_fig = px.line(
@@ -828,14 +1017,14 @@ def render_dashboard() -> None:
             color_discrete_sequence=["#245C43"],
         )
         history_fig.update_traces(line={"width": 3}, marker={"size": 8})
-        history_fig.update_layout(xaxis_title="Arrival date", yaxis_title="Average modal price (₹/quintal)")
+        history_fig.update_layout(xaxis_title=tr("Arrival date"), yaxis_title=tr("Average modal price (₹/quintal)"))
         history_fig.update_layout(template="plotly_dark" if dark_mode else "plotly_white",
                                   hovermode="x unified", margin=dict(l=10, r=20, t=25, b=20))
         history_fig.update_traces(line={"width": 3}, marker={"size": 8},
                                   hovertemplate="%{x|%d %b %Y}<br>₹%{y:,.0f}/quintal<extra></extra>")
         st.plotly_chart(history_fig, use_container_width=True)
 
-    st.caption("Decision support only. Market prices vary; verify current prices with the selected mandi.")
+    st.caption(tr("Decision support only. Market prices vary; verify current prices with the selected mandi."))
 
 
 initialize_user_store()
