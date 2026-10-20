@@ -168,14 +168,23 @@ def render_language_picker(container=st) -> None:
 
 
 def render_page_intro() -> None:
+    with st.container(border=True, key="how_to_banner"):
+        heading_col, language_col = st.columns([5, 1], vertical_alignment="center")
+        with heading_col:
+            st.markdown(f"#### 📘 {tr('How to use this dashboard')}")
+        with language_col:
+            render_language_picker()
+        left_steps, right_steps = st.columns(2)
+        with left_steps:
+            st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
+            st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
+        with right_steps:
+            st.markdown("3. " + tr("Review the latest published mandi reports and the historical price chart."))
+            st.markdown("4. " + tr("Use the download button to save the market comparison as a CSV file."))
+        st.caption(tr("The weather guide is an illustrative planning aid, not an official mandi quote. Check the reported price and local conditions before making a sale decision."))
+
     st.title(tr("🌾 AgriSense"))
     st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
-    with st.expander(tr("How to use this dashboard"), expanded=False):
-        st.markdown("1. " + tr("Choose your crop, then select the state, district, and variety you want to compare."))
-        st.markdown("2. " + tr("Compare the reported mandi prices and the weather guide for your home district."))
-        st.markdown("3. " + tr("Review the latest published mandi reports and the historical price chart."))
-        st.markdown("4. " + tr("Use the download button to save the market comparison as a CSV file."))
-        st.info(tr("The weather guide is an illustrative planning aid, not an official mandi quote. Check the reported price and local conditions before making a sale decision."))
 
 
 def display_columns(frame: pd.DataFrame) -> pd.DataFrame:
@@ -832,9 +841,6 @@ def render_login_page() -> None:
 
 def render_dashboard() -> None:
     user = st.session_state["authenticated_user"]
-    _, language_col = st.columns([5, 1])
-    with language_col:
-        render_language_picker()
     render_page_intro()
     with st.sidebar:
         st.session_state.setdefault("dark_mode", False)
