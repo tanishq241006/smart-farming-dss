@@ -861,7 +861,7 @@ def render_dashboard() -> None:
     st.markdown('<div class="agrisense-header-brand">🌾 AgriSense</div>', unsafe_allow_html=True)
     with st.popover(f"📘 {tr('How to use')}", key="header_how_to_use"):
         render_how_to_use_box()
-    st.subheader(tr("Good to see you, {user}").format(user=user))
+    st.title(tr("Good to see you, {user}").format(user=user))
     st.caption(tr("AgriSense helps farmers compare local mandi prices and see weather-aware planning guidance."))
     with st.sidebar:
         render_language_picker(show_label=True)
